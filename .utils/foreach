@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# HELP foreach 'echo' ./*; run a command for each element provided, or from stdin
+
+foreach () {
+    args=("${@:2}")
+    [[ $# -eq 1 ]] && mapfile -t args < <(cat -)
+
+    for arg in "${args[@]}"; do
+        $1 "$arg"
+    done
+}
+
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] && foreach "$@"
