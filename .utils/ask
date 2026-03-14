@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
 # HELP ask <user | system> <question | input | choice>; ask the user (stdout) or the system (stderr) a <type>
+
+show-usage () (
+    echo "Usage: prompt user for common stuff.
+        ask [user/system] question <question>: returns 0 on 'Yes', fails with any err code on 'No'
+        ask [user/system] choice <option 1> <option 2> <option N>: at least 1 option, accepts any amount. echoes the user choice (capture stdout), and use
+        ask [user/system] input <prompt>: echoes the user choice (capture stdout), and use"
+)
+
 echo-channel () {
     if [[ -n "$IS_SYSTEM" ]]; then
         echo "$@" 1>&2
@@ -74,8 +82,10 @@ ask () (
     # sanity checks:
     #  - we need at least 3 arguments (shortest version is 'user choice Q&A'
     #  - 2nd argument must be either system or user
-    [[ $# -lt 3 ]] && exit 2
-    [[ $1 != "system" && $1 != "user" ]] && exit 2
+    if [[ $# -lt 3 ]] || [[ $1 != "system" && $1 != "user" ]]; then
+        show-usage
+        exit 2
+    fi
 
     IS_SYSTEM=""
     # redirect to stderr if this is addressed to the 'system', aka this is called from a script
