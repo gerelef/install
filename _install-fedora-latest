@@ -386,7 +386,7 @@ configure-system-defaults () (
     _echo status "-------------------SETTING UP SYSTEM DEFAULTS----------------"
     _echo debug "Configuring swappiness for zram"
     sudo tee "/etc/sysctl.d/90-swappiness.conf" << EOF
-vm.swappiness = 100
+vm.swappiness = 200
 EOF
     sudo tee "/usr/lib/systemd/zram-generator.conf" << EOF
 # see additional compression algorithms in "/sys/block/zram0/comp_algorithm"
@@ -418,8 +418,6 @@ polkit.addRule(
   }
 )
 EOF
-
-
     _echo debug 'Creating polkit policy @ /etc/polkit-1/localauthority/50-local.d/10-decrypt-disks.pkla'
     _echo debug ' ... in order to allow wheel users to decrypt drives without further authorization.'
     sudo tee '/etc/polkit-1/localauthority/50-local.d/10-decrypt-disks.pkla' <<EOF
