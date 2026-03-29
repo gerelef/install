@@ -1045,6 +1045,9 @@ _echo success "Done."
 _echo important "You may view all logs displayed in the current script post install via: journalctl -b -t 'setup.sh'"
 
 if checkc is gnome && test -n "$PERSONALIZE_DEFAULTS"; then
+    sudo dnf copr enable -y --quiet gerelef/gnome-shell-extensions
+    sudo dnf install -y --quiet gnome-shell-extension-fluent-battery-indicators
+
     _echo status "Personalizing GNOME session..."
     sleep 2
 
