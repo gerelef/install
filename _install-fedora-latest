@@ -241,6 +241,10 @@ install-proprietary-nvidia-drivers () (
     _echo debug "Added modeset & fbdev."
     sudo update-grub
     _echo debug "Updated grub."
+    if ! ask user question "Does your NVIDIA GPU have a USB-C interface?"; then
+        sudo tee "/etc/modprobe.d/blacklist_i2c.conf" <<< "blacklist i2c_nvidia_gpu"
+        _echo debug "Blacklisted i2c_nvidia_gpu."
+    fi
 
     _echo debug "Regenerating akmod build..."
     sudo akmods --force --rebuild || exit 1
