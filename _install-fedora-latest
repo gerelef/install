@@ -434,6 +434,8 @@ ResultActive=yes
 EOF
 
     sudo systemctl restart polkit
+
+    sudo systemctl enable --now systemd-oomd
     _echo success "Done."
 )
 
