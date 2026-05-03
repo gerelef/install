@@ -169,9 +169,10 @@ EOF
     sudo chattr +T /home
     _echo debug "Configured chattr +T for /home"
 
-    _echo important "Locking down kernel with confidentiality mode."
+    _echo important "Locking down kernel with integrity mode."
     _echo important "This will disable memory (and other) runtime inspections."
-    sudo grubby --args="lockdown=confidentiality" --update-kernel=ALL
+    _echo debug "Kindly do not lockdown=confidentiality, because the ebpf schedulers will not work."
+    sudo grubby --args="lockdown=integrity" --update-kernel=ALL
 
     _echo status "Adding preempt=full kernel parameter..."
     sudo grubby --update-kernel=ALL --args="preempt=full"
