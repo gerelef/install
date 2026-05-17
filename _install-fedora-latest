@@ -158,6 +158,12 @@ wifi.powersave = 2
 EOF
     fi
 
+    _echo status "Partially reverting Fedora 44 OpenSSL cert .pem file changes."
+    _echo debug "https://fedoraproject.org/wiki/Changes/droppingOfCertPemFile"
+    _echo debug "https://github.com/ValveSoftware/steam-for-linux/issues/12292#issuecomment-4036068249"
+    _echo debug "https://www.beamng.com/threads/linux-port-%E2%80%93-feedback-known-issues-and-faq.86422/page-62"
+    sudo ln -sf /etc/pki/tls/certs /etc/ssl/certs
+
     _echo status "Enabling power-efficient (but less secure) suspend to ram for mobile-type."
     _echo important "This will FAIL HSI-2 tests."
     sudo grubby --update-kernel=ALL --args="mem_sleep_default=deep"  # deep sleep
