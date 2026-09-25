@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2155
 
 # HELP install the latest personal fedora setup
 
@@ -129,27 +130,6 @@ GR_END
 optimize-hardware () (
     _echo status "-------------------OPTIMIZING HARDWARE----------------"
 
-    _echo status "Enabling scx_lavd (Steam Deck) scheduler."
-    _echo important "This is better for gaming workloads."
-    sudo dnf copr enable -y 'bieszczaders/kernel-cachyos-addons'
-    sudo dnf install -y --quiet --best --allowerasing --skip-unavailable scx-scheds
-
-    sudo tee /etc/systemd/system/scx-lavd.service <<EOF
-[Unit]
-Description=scx_lavd Scheduler
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/scx_lavd --autopilot
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-    sudo systemctl daemon-reload
-    sudo systemctl enable --now scx-lavd.service
-
     if journalctl --boot | grep -i 'failed to send h2c command'; then
         _echo important "Found error messages regarding wifi powersaving. Deactivating feature..."
         sudo tee /etc/NetworkManager/conf.d/wifi.conf <<EOF
@@ -162,6 +142,7 @@ EOF
     _echo debug "https://fedoraproject.org/wiki/Changes/droppingOfCertPemFile"
     _echo debug "https://github.com/ValveSoftware/steam-for-linux/issues/12292#issuecomment-4036068249"
     _echo debug "https://www.beamng.com/threads/linux-port-%E2%80%93-feedback-known-issues-and-faq.86422/page-62"
+    sudo ln -sfn /etc/pki/tls/certs/ca-certificates.crt /etc/pki/tls/certs/ca-bundle.crt
     sudo ln -sf /etc/pki/tls/certs /etc/ssl/certs
 
     _echo status "Enabling power-efficient (but less secure) suspend to ram for mobile-type."
@@ -255,7 +236,7 @@ install-proprietary-nvidia-drivers () (
 
     _echo debug "Regenerating akmod build..."
     sudo akmods --force --rebuild || exit 1
-    sudo dracut --force --regenerate-all || exit 1
+    sudo dracut --force --regenerate-all --verbose || exit 1
     _echo debug "Regenerated akmod build."
 
     _echo unexpected "NVIDIA drivers will be built on next boot."
