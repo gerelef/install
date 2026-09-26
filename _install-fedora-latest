@@ -608,7 +608,6 @@ it.mijorus.gearlever \
 "
 
 readonly INSTALLABLE_BTRFS_TOOLS="\
-btrfs-assistant \
 timeshift \
 "
 
